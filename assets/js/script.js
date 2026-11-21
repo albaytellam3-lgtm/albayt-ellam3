@@ -125,31 +125,37 @@
     }
 
     if (hamburgerBtn) {
-      hamburgerBtn.addEventListener('click', safeToggleDrawer);
-      hamburgerBtn.addEventListener('pointerup', (e) => {
-        if (e.pointerType === 'touch') {
-          safeToggleDrawer(e);
+      hamburgerBtn.onclick = function(e) {
+        if (e) {
+          if (e.cancelable) e.preventDefault();
+          e.stopPropagation();
         }
-      });
+        if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      };
     }
 
     if (closeDrawerBtn) {
-      closeDrawerBtn.addEventListener('click', (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
+      closeDrawerBtn.onclick = function(e) {
+        if (e) {
+          if (e.cancelable) e.preventDefault();
+          e.stopPropagation();
+        }
         closeDrawer();
-      });
+      };
     }
 
     if (drawerBackdrop) {
-      drawerBackdrop.addEventListener('click', (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
+      drawerBackdrop.onclick = function(e) {
+        if (e) {
+          if (e.cancelable) e.preventDefault();
+          e.stopPropagation();
+        }
         closeDrawer();
-      });
-      drawerBackdrop.addEventListener('touchstart', () => {
-        closeDrawer();
-      }, { passive: true });
+      };
     }
 
     // Global document-level event delegation
