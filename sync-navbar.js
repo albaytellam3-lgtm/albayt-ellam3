@@ -42,14 +42,22 @@ htmlFiles.forEach(file => {
   content = content.replace(/href=["']favicon-32x32\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
   content = content.replace(/href=["']favicon-16x16\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
 
-  // Cache bust CSS & JS to ?v=4.0
-  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.0');
-  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.0');
+  // Cache bust CSS & JS to ?v=4.5
+  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.5');
+  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.5');
 
-  // Fast inline mobile menu script in <head> for zero-delay responsiveness
+  // Fast inline mobile menu & accordion handlers in <head> for zero-delay responsiveness
   const inlineScriptMarker = '<!-- Fast Mobile Menu Handler -->';
-  if (!content.includes(inlineScriptMarker)) {
-    const inlineScriptTag = `\n  ${inlineScriptMarker}\n  <script>\n    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}};\n    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';};\n  </script>\n`;
+  const inlineScriptTag = `\n  ${inlineScriptMarker}\n  <script>\n    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.documentElement.classList.add('drawer-open');document.body.classList.add('drawer-open');}};\n    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');};\n    window.switchMobileSegment=function(btnId,panelId){var btns=document.querySelectorAll('.mobile-nav-segment .segment-btn');btns.forEach(function(b){b.classList.toggle('active',b.id===btnId||b.getAttribute('data-target')===panelId);});var panels=document.querySelectorAll('.mobile-panel-section');panels.forEach(function(p){p.classList.toggle('active',p.id===panelId);});};\n    window.toggleMobileAccordion=function(btn,e){if(e){e.preventDefault();e.stopPropagation();}var body=btn.nextElementSibling;if(!body)return;var isOpen=body.classList.toggle('open');btn.setAttribute('aria-expanded',String(isOpen));var ch=btn.querySelector('.chevron');if(ch){ch.style.transform=isOpen?'rotate(180deg)':'rotate(0deg)';}};\n  </script>\n`;
+
+  if (content.includes(inlineScriptMarker)) {
+    const endScriptTag = '</script>';
+    const startIdx = content.indexOf(inlineScriptMarker);
+    const endIdx = content.indexOf(endScriptTag, startIdx);
+    if (startIdx !== -1 && endIdx !== -1) {
+      content = content.substring(0, startIdx) + inlineScriptTag.trim() + '\n' + content.substring(endIdx + endScriptTag.length);
+    }
+  } else {
     content = content.replace('</head>', inlineScriptTag + '</head>');
   }
 

@@ -12,7 +12,7 @@
   <meta name="theme-color" content="#071b33">
   <link rel="icon" type="image/png" href="assets/images/logo-icon-badge.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="assets/css/styles.css?v=4.0">
+  <link rel="stylesheet" href="assets/css/styles.css?v=4.5">
 
   <link rel="canonical" href="https://albayt-ellam3.com/service-washing-machine-universal.html">
 
@@ -68,9 +68,13 @@
 
   <!-- Fast Mobile Menu Handler -->
   <script>
-    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}};
-    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';};
+    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.documentElement.classList.add('drawer-open');document.body.classList.add('drawer-open');}};
+    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');};
+    window.switchMobileSegment=function(btnId,panelId){var btns=document.querySelectorAll('.mobile-nav-segment .segment-btn');btns.forEach(function(b){b.classList.toggle('active',b.id===btnId||b.getAttribute('data-target')===panelId);});var panels=document.querySelectorAll('.mobile-panel-section');panels.forEach(function(p){p.classList.toggle('active',p.id===panelId);});};
+    window.toggleMobileAccordion=function(btn,e){if(e){e.preventDefault();e.stopPropagation();}var body=btn.nextElementSibling;if(!body)return;var isOpen=body.classList.toggle('open');btn.setAttribute('aria-expanded',String(isOpen));var ch=btn.querySelector('.chevron');if(ch){ch.style.transform=isOpen?'rotate(180deg)':'rotate(0deg)';}};
   </script>
+
+
 </head>
 <body>
 
@@ -804,13 +808,13 @@
         
         <!-- Mobile Segmented Controller -->
         <div class="mobile-nav-segment">
-          <button type="button" class="segment-btn active" id="mobTabApplianceBtn">
+          <button type="button" class="segment-btn active" id="mobTabApplianceBtn" data-target="mobPanelAppliance" onclick="window.switchMobileSegment('mobTabApplianceBtn', 'mobPanelAppliance')">
             🏷️ صيانة الأجهزة
           </button>
-          <button type="button" class="segment-btn" id="mobTabCleaningBtn">
+          <button type="button" class="segment-btn" id="mobTabCleaningBtn" data-target="mobPanelCleaning" onclick="window.switchMobileSegment('mobTabCleaningBtn', 'mobPanelCleaning')">
             ✨ النظافة والمكافحة
           </button>
-          <button type="button" class="segment-btn" id="mobTabBrandBtn">
+          <button type="button" class="segment-btn" id="mobTabBrandBtn" data-target="mobPanelBrand" onclick="window.switchMobileSegment('mobTabBrandBtn', 'mobPanelBrand')">
             🏢 مراكز الماركات
           </button>
         </div>
@@ -820,7 +824,7 @@
           
           <!-- Accordion Item 1: Washing Machines -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
               <span>🫧 صيانة الغسالات</span>
               <span class="chevron">▾</span>
             </button>
@@ -839,7 +843,7 @@
 
           <!-- Accordion Item 2: Refrigerators & Water Coolers -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
               <span>❄️ التبريد والتجميد ومبردات المياه</span>
               <span class="chevron">▾</span>
             </button>
@@ -857,7 +861,7 @@
 
           <!-- Accordion Item 3: Ovens & Cookers -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
               <span>🔥 معدات الطهي والأفران</span>
               <span class="chevron">▾</span>
             </button>
@@ -872,7 +876,7 @@
 
           <!-- Accordion Item 4: Dishwashers -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
               <span>🍽️ صيانة غسالات الأطباق</span>
               <span class="chevron">▾</span>
             </button>
@@ -887,7 +891,7 @@
 
           <!-- Accordion Item 5: Dryers -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
               <span>👕 صيانة المجففات والنشافات</span>
               <span class="chevron">▾</span>
             </button>
@@ -901,7 +905,7 @@
 
           <!-- Accordion Item 6: Air Conditioners -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
               <span>💨 صيانة وتنظيف التكييفات</span>
               <span class="chevron">▾</span>
             </button>
@@ -913,20 +917,22 @@
             </div>
           </div>
 
-          <!-- Accordion Item 7: Water Heaters -->
+          <!-- Accordion Item 7: Water Heaters & Room Heaters -->
           <div class="mob-accordion-item">
-            <button type="button" class="mob-accordion-header" aria-expanded="false">
-              <span>♨️ صيانة سخانات مياه الاستحمام</span>
+            <button type="button" class="mob-accordion-header" aria-expanded="false" onclick="window.toggleMobileAccordion(this, event)">
+              <span>🔥 صيانة السخانات والدفايات المنزلية</span>
               <span class="chevron">▾</span>
             </button>
             <div class="mob-accordion-body">
-              <a href="heaters.html" class="mob-sub-link highlight">⭐ الدليل الشامل لسخانات الاستحمام</a>
+              <a href="heaters.html" class="mob-sub-link highlight">⭐ الدليل الشامل لصيانة السخانات والدفايات</a>
+              <a href="heaters.html#gas" class="mob-sub-link">صيانة سخانات الغاز المركزية والفورية</a>
+              <a href="heaters.html#electric" class="mob-sub-link">صيانة سخانات الكهرباء والخزانات</a>
+              <a href="heaters.html#heaters" class="mob-sub-link">صيانة وإصلاح الدفايات المنزلية والزيتية</a>
               <a href="heaters.html#olympic" class="mob-sub-link">سخانات أوليمبيك إلكتريك</a>
               <a href="heaters.html#ariston" class="mob-sub-link">سخانات أريستون غاز وكهرباء</a>
               <a href="heaters.html#fresh" class="mob-sub-link">سخانات فريش</a>
               <a href="heaters.html#tornado" class="mob-sub-link">سخانات تورنيدو العربي</a>
-              <a href="heaters.html#kiriazi" class="mob-sub-link">سخانات كريازي غاز</a>
-              <a href="heaters.html#zanussi" class="mob-sub-link">سخانات زانوسي الرقمية</a>
+              <a href="heaters.html#parts" class="mob-sub-link">قطع غيار أصلية للسخانات (هيتر وثرموستات)</a>
             </div>
           </div>
 
@@ -1081,25 +1087,33 @@
   </div>
   <div class="drawer-backdrop" id="drawerBackdrop" onclick="window.closeMobileMenu(event)"></div>
 
-  <!-- Sleek Floating Action Buttons (Elevated & Zero Mobile System Bar Overlap) -->
+  <!-- Altorath-Inspired Pro Floating Action Buttons (Elevated, High-Conversion CTA, Zero System Overlap) -->
   <div class="floating-contact-wrap" id="floatingContactWrap" aria-label="أزرار التواصل السريع">
-    <!-- WhatsApp Direct FAB (Left) -->
-    <a href="https://wa.me/966570406738?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D9%85%D8%B9" target="_blank" rel="noopener" class="fab-btn fab-whatsapp" aria-label="تواصل فوري عبر الواتساب 0570406738">
-      <div class="fab-pulse"></div>
-      <svg class="fab-icon" viewBox="0 0 32 32" fill="currentColor">
-        <path d="M16.01 2.01C8.28 2.01 2 8.28 2 16.01c0 2.65.73 5.14 2 7.28L2 30l6.93-1.96c2.05 1.18 4.43 1.83 7.08 1.83 7.73 0 14.01-6.27 14.01-14.01 0-7.73-6.28-14-14.01-14zm8.24 19.82c-.35.98-1.74 1.8-2.42 1.86-.63.05-1.44.07-2.32-.21-.54-.17-1.24-.4-2.14-.8-3.77-1.63-6.22-5.46-6.41-5.71-.19-.26-1.54-2.05-1.54-3.91 0-1.86.97-2.77 1.32-3.15.35-.38.76-.48 1.01-.48.26 0 .51 0 .73.01.23.01.55-.09.86.66.32.77 1.1 2.68 1.19 2.87.1.19.16.42.03.67-.13.26-.19.42-.38.64-.19.23-.41.51-.58.68-.2.2-.41.42-.18.82.23.4 1.02 1.68 2.2 2.73 1.51 1.34 2.78 1.76 3.18 1.96.4.2.63.17.86-.1.24-.26 1.01-1.18 1.28-1.58.27-.4.54-.33.91-.19.38.13 2.4 1.13 2.81 1.34.41.2.68.31.78.48.1.18.1 1.02-.25 2z"/>
-      </svg>
-      <span class="fab-label">واتساب</span>
-    </a>
+    <!-- WhatsApp Pro Item (Left) -->
+    <div class="pro-fab-item">
+      <a href="https://wa.me/966570406738?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D9%85%D8%B9" target="_blank" rel="noopener" class="fab-cta-badge wa-badge" aria-hidden="true">
+        <span class="status-dot"></span> متصل الآن • تواصل فوري
+      </a>
+      <a href="https://wa.me/966570406738?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D9%85%D8%B9" target="_blank" rel="noopener" class="pro-fab-btn pro-fab-whatsapp" aria-label="تواصل فوري عبر الواتساب 0570406738">
+        <div class="pro-fab-pulse"></div>
+        <svg viewBox="0 0 32 32">
+          <path d="M16.01 2.01C8.28 2.01 2 8.28 2 16.01c0 2.65.73 5.14 2 7.28L2 30l6.93-1.96c2.05 1.18 4.43 1.83 7.08 1.83 7.73 0 14.01-6.27 14.01-14.01 0-7.73-6.28-14-14.01-14zm8.24 19.82c-.35.98-1.74 1.8-2.42 1.86-.63.05-1.44.07-2.32-.21-.54-.17-1.24-.4-2.14-.8-3.77-1.63-6.22-5.46-6.41-5.71-.19-.26-1.54-2.05-1.54-3.91 0-1.86.97-2.77 1.32-3.15.35-.38.76-.48 1.01-.48.26 0 .51 0 .73.01.23.01.55-.09.86.66.32.77 1.1 2.68 1.19 2.87.1.19.16.42.03.67-.13.26-.19.42-.38.64-.19.23-.41.51-.58.68-.2.2-.41.42-.18.82.23.4 1.02 1.68 2.2 2.73 1.51 1.34 2.78 1.76 3.18 1.96.4.2.63.17.86-.1.24-.26 1.01-1.18 1.28-1.58.27-.4.54-.33.91-.19.38.13 2.4 1.13 2.81 1.34.41.2.68.31.78.48.1.18.1 1.02-.25 2z"/>
+        </svg>
+      </a>
+    </div>
 
-    <!-- Phone Direct FAB (Right) -->
-    <a href="tel:0570406738" class="fab-btn fab-phone" aria-label="اتصال هاتفي مباشر 0570406738">
-      <div class="fab-pulse"></div>
-      <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-      </svg>
-      <span class="fab-label">اتصل بنا</span>
-    </a>
+    <!-- Phone Pro Item (Right) -->
+    <div class="pro-fab-item">
+      <a href="tel:0570406738" class="fab-cta-badge call-badge" aria-hidden="true">
+        📞 خصم 30% • اتصل الآن
+      </a>
+      <a href="tel:0570406738" class="pro-fab-btn pro-fab-call" aria-label="اتصال هاتفي مباشر 0570406738">
+        <div class="pro-fab-pulse"></div>
+        <svg viewBox="0 0 24 24" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </a>
+    </div>
   </div>
   <!-- END NAVBAR AND MOBILE NAVIGATION -->
 
@@ -1408,7 +1422,7 @@
   </footer>
 
 
-  <script src="assets/js/script.js?v=4.0" defer></script>
+  <script src="assets/js/script.js?v=4.5" defer></script>
   <script src="assets/js/live-orders-popup.js" defer></script>
 </body>
 </html>

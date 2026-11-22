@@ -81,9 +81,8 @@
       drawer.classList.add('open');
       if (backdrop) backdrop.classList.add('active');
       if (btn) btn.setAttribute('aria-expanded', 'true');
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
+      document.documentElement.classList.add('drawer-open');
+      document.body.classList.add('drawer-open');
     }
   };
 
@@ -98,9 +97,34 @@
     if (drawer) drawer.classList.remove('open');
     if (backdrop) backdrop.classList.remove('active');
     if (btn) btn.setAttribute('aria-expanded', 'false');
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
+    document.documentElement.classList.remove('drawer-open');
+    document.body.classList.remove('drawer-open');
+  };
+
+  window.switchMobileSegment = function(btnId, panelId) {
+    const btns = document.querySelectorAll('.mobile-nav-segment .segment-btn');
+    btns.forEach((b) => {
+      b.classList.toggle('active', b.id === btnId || b.getAttribute('data-target') === panelId);
+    });
+    const panels = document.querySelectorAll('.mobile-panel-section');
+    panels.forEach((p) => {
+      p.classList.toggle('active', p.id === panelId);
+    });
+  };
+
+  window.toggleMobileAccordion = function(headerBtn, e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const body = headerBtn.nextElementSibling;
+    if (!body) return;
+    const isOpen = body.classList.toggle('open');
+    headerBtn.setAttribute('aria-expanded', String(isOpen));
+    const chevron = headerBtn.querySelector('.chevron');
+    if (chevron) {
+      chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
   };
 
   function initApp() {
@@ -167,13 +191,13 @@
           href.startsWith('http') ||
           link.getAttribute('target') === '_blank'
         ) {
-          closeDrawer();
+          window.closeMobileMenu();
           return;
         }
 
         if (href.startsWith('#')) {
           e.preventDefault();
-          closeDrawer();
+          window.closeMobileMenu();
           const target = document.querySelector(href);
           if (target) {
             target.scrollIntoView({ behavior: 'smooth' });
@@ -186,7 +210,7 @@
 
         if (linkHash && (linkPage === '' || linkPage === currentPath)) {
           e.preventDefault();
-          closeDrawer();
+          window.closeMobileMenu();
           const target = document.getElementById(linkHash);
           if (target) {
             target.scrollIntoView({ behavior: 'smooth' });
@@ -194,7 +218,7 @@
           return;
         }
 
-        closeDrawer();
+        window.closeMobileMenu();
       });
     });
 
