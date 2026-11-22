@@ -112,6 +112,30 @@
     });
   };
 
+  window.toggleMobileAccordion = function(btn, e) {
+    if (e) {
+      if (e.cancelable) e.preventDefault();
+      e.stopPropagation();
+    }
+    var header = btn.closest ? (btn.closest('.mob-accordion-header') || btn) : btn;
+    var item = header.closest ? header.closest('.mob-accordion-item') : null;
+    var body = item ? item.querySelector('.mob-accordion-body') : header.nextElementSibling;
+    if (!body) return;
+    var isOpen = body.classList.contains('open');
+    if (isOpen) {
+      body.classList.remove('open');
+      header.setAttribute('aria-expanded', 'false');
+      var ch = header.querySelector('.chevron');
+      if (ch) ch.style.transform = 'rotate(0deg)';
+    } else {
+      body.classList.add('open');
+      header.setAttribute('aria-expanded', 'true');
+      var ch = header.querySelector('.chevron');
+      if (ch) ch.style.transform = 'rotate(180deg)';
+    }
+  };
+
+
   window.toggleMobileAccordion = function(headerBtn, e) {
     if (e) {
       e.preventDefault();
@@ -433,20 +457,7 @@
       switchMobileSegment(mobTabBrandBtn, mobPanelBrand);
     });
 
-    // Mobile Sub-Accordion Toggle
-    document.querySelectorAll('.mob-accordion-header').forEach((header) => {
-      header.addEventListener('click', (e) => {
-        e.preventDefault();
-        const body = header.nextElementSibling;
-        const isOpen = body?.classList.toggle('open');
-        header.setAttribute('aria-expanded', String(isOpen));
-
-        const chevron = header.querySelector('.chevron');
-        if (chevron) {
-          chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-      });
-    });
+    // Mobile Sub-Accordion Toggle handled by window.toggleMobileAccordion
 
     // -------------------------------------------------------------
     // FAQ Accordion

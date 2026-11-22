@@ -1,5 +1,6 @@
 {
   "name": "albayt-ellam3",
+  "account_id": "644159fd42c2bd80448c0e1af104e076",
   "main": "worker.js",
   "compatibility_date": "2026-11-21",
   "assets": {

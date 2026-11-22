@@ -42,13 +42,13 @@ htmlFiles.forEach(file => {
   content = content.replace(/href=["']favicon-32x32\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
   content = content.replace(/href=["']favicon-16x16\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
 
-  // Cache bust CSS & JS to ?v=4.5
-  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.5');
-  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.5');
+  // Cache bust CSS & JS to ?v=4.6
+  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.6');
+  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.6');
 
   // Fast inline mobile menu & accordion handlers in <head> for zero-delay responsiveness
   const inlineScriptMarker = '<!-- Fast Mobile Menu Handler -->';
-  const inlineScriptTag = `\n  ${inlineScriptMarker}\n  <script>\n    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.documentElement.classList.add('drawer-open');document.body.classList.add('drawer-open');}};\n    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');};\n    window.switchMobileSegment=function(btnId,panelId){var btns=document.querySelectorAll('.mobile-nav-segment .segment-btn');btns.forEach(function(b){b.classList.toggle('active',b.id===btnId||b.getAttribute('data-target')===panelId);});var panels=document.querySelectorAll('.mobile-panel-section');panels.forEach(function(p){p.classList.toggle('active',p.id===panelId);});};\n    window.toggleMobileAccordion=function(btn,e){if(e){e.preventDefault();e.stopPropagation();}var body=btn.nextElementSibling;if(!body)return;var isOpen=body.classList.toggle('open');btn.setAttribute('aria-expanded',String(isOpen));var ch=btn.querySelector('.chevron');if(ch){ch.style.transform=isOpen?'rotate(180deg)':'rotate(0deg)';}};\n  </script>\n`;
+  const inlineScriptTag = `\n  ${inlineScriptMarker}\n  <script>\n    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.documentElement.classList.add('drawer-open');document.body.classList.add('drawer-open');}};\n    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.documentElement.classList.remove('drawer-open');document.body.classList.remove('drawer-open');};\n    window.switchMobileSegment=function(btnId,panelId){var btns=document.querySelectorAll('.mobile-nav-segment .segment-btn');btns.forEach(function(b){b.classList.toggle('active',b.id===btnId||b.getAttribute('data-target')===panelId);});var panels=document.querySelectorAll('.mobile-panel-section');panels.forEach(function(p){p.classList.toggle('active',p.id===panelId);});};\n    window.toggleMobileAccordion=function(btn,e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var header=btn.closest?(btn.closest('.mob-accordion-header')||btn):btn;var item=header.closest?header.closest('.mob-accordion-item'):null;var body=item?item.querySelector('.mob-accordion-body'):header.nextElementSibling;if(!body)return;var isOpen=body.classList.contains('open');if(isOpen){body.classList.remove('open');header.setAttribute('aria-expanded','false');var ch=header.querySelector('.chevron');if(ch)ch.style.transform='rotate(0deg)';}else{body.classList.add('open');header.setAttribute('aria-expanded','true');var ch=header.querySelector('.chevron');if(ch)ch.style.transform='rotate(180deg)';}};\n  </script>\n`;
 
   if (content.includes(inlineScriptMarker)) {
     const endScriptTag = '</script>';
@@ -96,6 +96,35 @@ htmlFiles.forEach(file => {
         customizedNavbar = customizedNavbar.replace(
           '<a class="drawer-link" href="index.html">الرئيسية</a>',
           '<a class="drawer-link active" href="index.html">الرئيسية</a>'
+        );
+
+        // RESTORE ORIGINAL BRAND LOGO FOR INDEX.HTML ONLY (as requested by user)
+        const oldHomeHeaderBrand = `<a class="brand" href="index.html" aria-label="البيت اللامع - الرئيسية" style="display: inline-flex; align-items: center; gap: 12px; text-decoration: none;">
+      <img src="assets/images/logo-transparent.png" alt="شعار شركة البيت اللامع للتنظيف بحفر الباطن" class="brand-logo-img" style="height: 48px; width: auto; max-width: 170px; object-fit: contain;">
+      <span class="brand-text" style="display: flex; flex-direction: column; line-height: 1.2;">
+        <b style="font-size: 17px; color: #0f172a; font-weight: 900;">شركة البيت اللامع</b>
+        <small style="font-size: 12px; color: #059669; font-weight: 700;">للتنظيف ومكافحة الحشرات والصيانة</small>
+      </span>
+    </a>`;
+
+        const oldHomeDrawerBrand = `<a class="brand" href="index.html" aria-label="البيت اللامع - الرئيسية" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+      <img src="assets/images/logo-transparent.png" alt="شعار شركة البيت اللامع للتنظيف بحفر الباطن" class="brand-logo-img" style="height: 44px; width: auto; max-width: 150px; object-fit: contain;">
+      <span class="brand-text" style="display: flex; flex-direction: column; line-height: 1.2;">
+        <b style="font-size: 16px; color: #0f172a; font-weight: 900;">شركة البيت اللامع</b>
+        <small style="font-size: 11px; color: #059669; font-weight: 700;">للتنظيف ومكافحة الحشرات</small>
+      </span>
+    </a>`;
+
+        // Replace brand in header (first occurrence)
+        customizedNavbar = customizedNavbar.replace(
+          /<a class="brand" href="index\.html" aria-label="البيت اللامع - الرئيسية">[\s\S]*?<\/a>/,
+          oldHomeHeaderBrand
+        );
+
+        // Replace brand in drawer (second occurrence)
+        customizedNavbar = customizedNavbar.replace(
+          /<a class="brand" href="index\.html" aria-label="البيت اللامع - الرئيسية">[\s\S]*?<\/a>/,
+          oldHomeDrawerBrand
         );
       } else if (file === 'about.html') {
         customizedNavbar = customizedNavbar.replace(
@@ -183,7 +212,17 @@ htmlFiles.forEach(file => {
     }
   }
 
-  // 4. Global Branding Consistency
+  // 4. Update Topbar with TikTok and Maps Links if present
+  const topbarContactRegex = /<div class="topbar-contact"[^>]*>[\s\S]*?<\/div>/;
+  const newTopbarContact = `<div class="topbar-contact" style="display: flex; gap: 10px; align-items: center; flex-shrink: 0;">
+        <a href="tel:0570406738" class="topbar-link phone-link" style="color: #ffffff; font-weight: 800; text-decoration: none; white-space: nowrap;"><span class="icon">📞</span> <span dir="ltr">0570406738</span></a>
+        <a href="https://wa.me/966570406738" target="_blank" rel="noopener" class="topbar-link wa-link" style="color: #ffffff; font-weight: 700; text-decoration: none; white-space: nowrap;"><span class="icon">💬</span> واتساب</a>
+        <a href="https://www.google.com/maps/place/%D8%B4%D8%B1%D9%83%D8%A9+%D8%A7%D9%84%D8%A8%D9%8A%D8%AA+%D8%A7%D9%84%D9%84%D8%A7%D9%85%D8%B9+%D9%84%D9%84%D8%B5%D9%8A%D8%A7%D9%86%D8%A9%E2%80%AD/data=!4m2!3m1!1s0x0:0x2e77f864da0abfef?sa=X&ved=1t:2428&hl=ar&ictx=111" target="_blank" rel="noopener" class="topbar-link" style="color: #ffffff; font-weight: 700; text-decoration: none; white-space: nowrap;"><span class="icon">📍</span> اللوكيشن</a>
+        <a href="https://www.tiktok.com/@albaytellama3" target="_blank" rel="noopener" class="topbar-link" style="color: #ffffff; font-weight: 700; text-decoration: none; white-space: nowrap;"><span class="icon">🎵</span> تيك توك</a>
+      </div>`;
+  content = content.replace(topbarContactRegex, newTopbarContact);
+
+  // 5. Global Branding Consistency
   content = content.replace(/مدير التوكيل/g, 'البيت اللامع');
   content = content.replace(/مدير الصيانة/g, 'البيت اللامع');
   content = content.replace(/<b>\s*مدير\s*<\/b>\s*<small>\s*الصيانة\s*<\/small>/g, '<b>البيت</b> <small>اللامع</small>');
@@ -207,7 +246,7 @@ htmlFiles.forEach(file => {
   content = content.replace(/01012345678/g, '0570406738');
   content = content.replace(/placeholder=["']01xxxxxxxxx["']/g, 'placeholder="05xxxxxxxx"');
 
-  // 5. Save file with clean UTF-8
+  // 6. Save file with clean UTF-8
   fs.writeFileSync(filePath, content, { encoding: 'utf8' });
   syncedCount++;
 });
