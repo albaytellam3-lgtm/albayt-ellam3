@@ -12,7 +12,7 @@
   <meta name="theme-color" content="#071b33">
   <link rel="icon" type="image/png" href="assets/images/logo-icon-badge.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="assets/css/styles.css?v=3.0">
+  <link rel="stylesheet" href="assets/css/styles.css?v=4.0">
 
   <link rel="canonical" href="https://albayt-ellam3.com/article-15.html">
 
@@ -72,6 +72,12 @@
 }
   </script>
   <link rel="stylesheet" href="assets/css/live-orders.css">
+
+  <!-- Fast Mobile Menu Handler -->
+  <script>
+    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}};
+    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';};
+  </script>
 </head>
 <body>
 
@@ -619,12 +625,21 @@
                   </div>
                 </a>
 
-                <a href="service-pest-control.html#termites" class="cleaning-card-item">
+                <a href="service-pest-control.html#dafan" class="cleaning-card-item">
+                  <div class="cleaning-card-icon">🏗️</div>
+                  <div class="cleaning-card-meta">
+                    <strong>رش الدفان قبل صبة النظافة</strong>
+                    <small>تشبيع التربة وحزام عازل للأساسات بضمان 15 سنة</small>
+                    <span class="card-tag" style="background:#ffedd5; color:#c2410c;">ضمان 15 سنة</span>
+                  </div>
+                </a>
+
+                <a href="service-pest-control.html#wood-borer" class="cleaning-card-item">
                   <div class="cleaning-card-icon">🪵</div>
                   <div class="cleaning-card-meta">
-                    <strong>مكافحة النمل الأبيض ورش الدفان</strong>
-                    <small>رش دفان الأساسات قبل الصبة وحقن بالضمان</small>
-                    <span class="card-tag" style="background:#fef3c7; color:#b45309;">ضمان رسمي 10 سنوات</span>
+                    <strong>مكافحة النمل وسوس الخشب</strong>
+                    <small>فحص حراري وحقن ميكروي للأثاث والأبواب المصابة</small>
+                    <span class="card-tag" style="background:#fee2e2; color:#b91c1c;">حقن متخصص</span>
                   </div>
                 </a>
               </div>
@@ -764,11 +779,17 @@
     <!-- Action Button & Hamburger -->
     <div class="nav-actions">
       <a href="contact.html#booking" class="btn btn-primary nav-cta">احجز خدمة الآن ←</a>
-      <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="فتح القائمة المتنقلة" aria-expanded="false" aria-controls="mobileDrawer">
-        <span></span><span></span><span></span>
+      <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="فتح القائمة الرئيسية" aria-expanded="false" aria-controls="mobileDrawer" onclick="window.toggleMobileMenu(event)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <span class="hamburger-title">القائمة</span>
       </button>
     </div>
   </div>
+</header>
 
   <!-- Mobile Drawer Navigation -->
   <div class="mobile-drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="قائمة الموبايل">
@@ -779,7 +800,7 @@
         <b>البيت</b> <small>اللامع</small>
       </span>
     </a>
-      <button class="close-drawer-btn" id="closeDrawerBtn" type="button" aria-label="إغلاق القائمة">✕</button>
+      <button class="close-drawer-btn" id="closeDrawerBtn" type="button" aria-label="إغلاق القائمة" onclick="window.closeMobileMenu(event)">✕</button>
     </div>
     <div class="drawer-content">
       <a class="drawer-link" href="index.html">الرئيسية</a>
@@ -1065,31 +1086,29 @@
       </div>
     </div>
   </div>
-  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="window.closeMobileMenu(event)"></div>
 
-  <!-- Sticky Quick Mobile Contact Bar (Visible exclusively on mobile <= 768px) -->
-  <aside class="mobile-sticky-bar" id="mobileStickyBar" aria-label="أزرار الاتصال السريع المباشر">
-    <div class="sticky-bar-container">
-      <a href="tel:0570406738" class="sticky-bar-btn sticky-general-btn" aria-label="اتصال مباشر صيانة الأجهزة المنزلية 0570406738">
-        <span class="sticky-btn-icon">🔧</span>
-        <div class="sticky-btn-meta">
-          <span class="sticky-btn-title">صيانة الأجهزة</span>
-          <span class="sticky-btn-number" dir="ltr">0570406738</span>
-        </div>
-      </a>
-      <a href="tel:0570406738" class="sticky-bar-btn sticky-cleaning-btn" style="background: linear-gradient(135deg, #059669, #10b981);" aria-label="اتصال مباشر خدمات النظافة والمكافحة 0570406738">
-        <span class="sticky-btn-icon">✨</span>
-        <div class="sticky-btn-meta">
-          <span class="sticky-btn-title">النظافة والمكافحة</span>
-          <span class="sticky-btn-number" dir="ltr">0570406738</span>
-        </div>
-      </a>
-      <a href="https://wa.me/966570406738" target="_blank" rel="noopener" class="sticky-bar-wa-btn" id="stickyWaBtn" aria-label="محادثة واتساب سريعة">
-        <span class="sticky-wa-icon">💬</span>
-      </a>
-    </div>
-  </aside>
-</header>
+  <!-- Sleek Floating Action Buttons (Elevated & Zero Mobile System Bar Overlap) -->
+  <div class="floating-contact-wrap" id="floatingContactWrap" aria-label="أزرار التواصل السريع">
+    <!-- WhatsApp Direct FAB (Left) -->
+    <a href="https://wa.me/966570406738?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A8%D9%8A%D8%AA%20%D8%A7%D9%84%D9%84%D8%A7%D9%85%D8%B9" target="_blank" rel="noopener" class="fab-btn fab-whatsapp" aria-label="تواصل فوري عبر الواتساب 0570406738">
+      <div class="fab-pulse"></div>
+      <svg class="fab-icon" viewBox="0 0 32 32" fill="currentColor">
+        <path d="M16.01 2.01C8.28 2.01 2 8.28 2 16.01c0 2.65.73 5.14 2 7.28L2 30l6.93-1.96c2.05 1.18 4.43 1.83 7.08 1.83 7.73 0 14.01-6.27 14.01-14.01 0-7.73-6.28-14-14.01-14zm8.24 19.82c-.35.98-1.74 1.8-2.42 1.86-.63.05-1.44.07-2.32-.21-.54-.17-1.24-.4-2.14-.8-3.77-1.63-6.22-5.46-6.41-5.71-.19-.26-1.54-2.05-1.54-3.91 0-1.86.97-2.77 1.32-3.15.35-.38.76-.48 1.01-.48.26 0 .51 0 .73.01.23.01.55-.09.86.66.32.77 1.1 2.68 1.19 2.87.1.19.16.42.03.67-.13.26-.19.42-.38.64-.19.23-.41.51-.58.68-.2.2-.41.42-.18.82.23.4 1.02 1.68 2.2 2.73 1.51 1.34 2.78 1.76 3.18 1.96.4.2.63.17.86-.1.24-.26 1.01-1.18 1.28-1.58.27-.4.54-.33.91-.19.38.13 2.4 1.13 2.81 1.34.41.2.68.31.78.48.1.18.1 1.02-.25 2z"/>
+      </svg>
+      <span class="fab-label">واتساب</span>
+    </a>
+
+    <!-- Phone Direct FAB (Right) -->
+    <a href="tel:0570406738" class="fab-btn fab-phone" aria-label="اتصال هاتفي مباشر 0570406738">
+      <div class="fab-pulse"></div>
+      <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+      <span class="fab-label">اتصل بنا</span>
+    </a>
+  </div>
+  <!-- END NAVBAR AND MOBILE NAVIGATION -->
 
 
   <!-- Page Hero & Breadcrumb -->
@@ -1315,7 +1334,7 @@
   </footer>
 
 
-  <script src="assets/js/script.js?v=3.0" defer></script>
+  <script src="assets/js/script.js?v=4.0" defer></script>
   <script src="assets/js/live-orders-popup.js" defer></script>
 </body>
 </html>

@@ -62,6 +62,47 @@
     });
   }
 
+  // -------------------------------------------------------------
+  // Global Mobile Drawer Navigation Handlers
+  // -------------------------------------------------------------
+  window.toggleMobileMenu = function(e) {
+    if (e) {
+      if (e.cancelable) e.preventDefault();
+      e.stopPropagation();
+    }
+    const drawer = document.getElementById('mobileDrawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const btn = document.getElementById('hamburgerBtn');
+    if (!drawer) return;
+    const isOpen = drawer.classList.contains('open');
+    if (isOpen) {
+      window.closeMobileMenu(e);
+    } else {
+      drawer.classList.add('open');
+      if (backdrop) backdrop.classList.add('active');
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    }
+  };
+
+  window.closeMobileMenu = function(e) {
+    if (e) {
+      if (e.cancelable) e.preventDefault();
+      e.stopPropagation();
+    }
+    const drawer = document.getElementById('mobileDrawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const btn = document.getElementById('hamburgerBtn');
+    if (drawer) drawer.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('active');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.body.style.touchAction = '';
+  };
+
   function initApp() {
     if (window.__APP_INIT_DONE__) return;
     window.__APP_INIT_DONE__ = true;
@@ -70,118 +111,47 @@
     syncActiveNavLinks();
 
     // -------------------------------------------------------------
-    // Mobile Drawer Navigation
+    // Mobile Drawer Navigation Bindings
     // -------------------------------------------------------------
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const closeDrawerBtn = document.getElementById('closeDrawerBtn');
     const mobileDrawer = document.getElementById('mobileDrawer');
     const drawerBackdrop = document.getElementById('drawerBackdrop');
 
-    function isDrawerOpen() {
-      return !!(mobileDrawer && mobileDrawer.classList.contains('open'));
-    }
-
-    function openDrawer() {
-      if (!mobileDrawer) return;
-      mobileDrawer.classList.add('open');
-      drawerBackdrop?.classList.add('active');
-      hamburgerBtn?.setAttribute('aria-expanded', 'true');
-      document.documentElement.style.overflow = 'hidden';
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
-    }
-
-    function closeDrawer() {
-      if (!mobileDrawer) return;
-      mobileDrawer.classList.remove('open');
-      drawerBackdrop?.classList.remove('active');
-      hamburgerBtn?.setAttribute('aria-expanded', 'false');
-      document.documentElement.style.overflow = '';
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-    }
-
-    function toggleDrawer(e) {
-      if (e) {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-      }
-      if (isDrawerOpen()) {
-        closeDrawer();
-      } else {
-        openDrawer();
-      }
-    }
-
-    let lastToggleTime = 0;
-    function safeToggleDrawer(e) {
-      const now = Date.now();
-      if (now - lastToggleTime < 300) {
-        if (e && e.cancelable) e.preventDefault();
-        return;
-      }
-      lastToggleTime = now;
-      toggleDrawer(e);
-    }
-
     if (hamburgerBtn) {
-      hamburgerBtn.addEventListener('click', safeToggleDrawer);
-      hamburgerBtn.addEventListener('pointerup', (e) => {
-        if (e.pointerType === 'touch') {
-          safeToggleDrawer(e);
-        }
-      });
+      hamburgerBtn.onclick = window.toggleMobileMenu;
     }
-
     if (closeDrawerBtn) {
-      closeDrawerBtn.addEventListener('click', (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        closeDrawer();
-      });
+      closeDrawerBtn.onclick = window.closeMobileMenu;
     }
-
     if (drawerBackdrop) {
-      drawerBackdrop.addEventListener('click', (e) => {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        closeDrawer();
-      });
-      drawerBackdrop.addEventListener('touchstart', () => {
-        closeDrawer();
-      }, { passive: true });
+      drawerBackdrop.onclick = window.closeMobileMenu;
     }
 
     // Global document-level event delegation
     document.addEventListener('click', (e) => {
       const targetHamburger = e.target.closest('#hamburgerBtn, .hamburger-btn');
       if (targetHamburger) {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        safeToggleDrawer(e);
+        window.toggleMobileMenu(e);
         return;
       }
 
       const targetClose = e.target.closest('#closeDrawerBtn, .close-drawer-btn');
       if (targetClose) {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        closeDrawer();
+        window.closeMobileMenu(e);
         return;
       }
 
       const targetBackdrop = e.target.closest('#drawerBackdrop, .drawer-backdrop');
       if (targetBackdrop) {
-        if (e.cancelable) e.preventDefault();
-        e.stopPropagation();
-        closeDrawer();
+        window.closeMobileMenu(e);
         return;
       }
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isDrawerOpen()) {
-        closeDrawer();
+      if (e.key === 'Escape') {
+        window.closeMobileMenu(e);
       }
     });
 
@@ -229,51 +199,6 @@
     });
 
     // -------------------------------------------------------------
-    // Dropdown Hover Intent / Grace Delay (Fixes Hover Drop Bug)
-    // -------------------------------------------------------------
-    function setupDropdownHoverGrace(wrapperSelector, panelSelector) {
-      const wrapper = document.querySelector(wrapperSelector);
-      const panel = document.querySelector(panelSelector);
-      if (!wrapper || !panel) return;
-
-      let closeTimer = null;
-
-      function openMenu() {
-        if (closeTimer) {
-          clearTimeout(closeTimer);
-          closeTimer = null;
-        }
-        wrapper.classList.add('hover-active');
-        panel.classList.add('open');
-        panel.style.opacity = '1';
-        panel.style.visibility = 'visible';
-        panel.style.pointerEvents = 'auto';
-        panel.style.transform = 'translateY(0)';
-      }
-
-      function scheduleClose() {
-        if (closeTimer) clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => {
-          wrapper.classList.remove('hover-active');
-          panel.classList.remove('open');
-          panel.style.opacity = '';
-          panel.style.visibility = '';
-          panel.style.pointerEvents = '';
-          panel.style.transform = '';
-          closeTimer = null;
-        }, 320); // 320ms generous buffer for smooth downward cursor travel
-      }
-
-      wrapper.addEventListener('mouseenter', openMenu);
-      wrapper.addEventListener('mouseleave', scheduleClose);
-      panel.addEventListener('mouseenter', openMenu);
-      panel.addEventListener('mouseleave', scheduleClose);
-    }
-
-    setupDropdownHoverGrace('#megaMenuWrapper', '#desktopMegaMenu');
-    setupDropdownHoverGrace('#cleaningNavWrapper', '#cleaningDropdownPanel');
-
-    // -------------------------------------------------------------
     // Desktop Mega Menu Tabs (Appliance vs Brand vs Cleaning)
     // -------------------------------------------------------------
     const tabApplianceTrigger = document.getElementById('tabApplianceTrigger');
@@ -309,6 +234,121 @@
       e.preventDefault();
       switchDesktopMode(tabCleaningTrigger, panelByCleaning);
     });
+
+    // -------------------------------------------------------------
+    // Desktop Navigation Dropdowns: Mutual Exclusion & Grace Delay
+    // Prevents conflicting active states between Appliance Mega Menu & Cleaning Dropdown
+    // -------------------------------------------------------------
+    const megaWrapper = document.querySelector('#megaMenuWrapper');
+    const megaPanel = document.querySelector('#desktopMegaMenu');
+    const cleanWrapper = document.querySelector('#cleaningNavWrapper');
+    const cleanPanel = document.querySelector('#cleaningDropdownPanel');
+
+    let megaCloseTimer = null;
+    let cleanCloseTimer = null;
+
+    function openMega() {
+      if (cleanCloseTimer) {
+        clearTimeout(cleanCloseTimer);
+        cleanCloseTimer = null;
+      }
+      closeCleanImmediate();
+
+      if (megaCloseTimer) {
+        clearTimeout(megaCloseTimer);
+        megaCloseTimer = null;
+      }
+      if (megaWrapper && megaPanel) {
+        megaWrapper.classList.add('hover-active');
+        megaPanel.classList.add('open');
+        megaPanel.style.opacity = '1';
+        megaPanel.style.visibility = 'visible';
+        megaPanel.style.pointerEvents = 'auto';
+        megaPanel.style.transform = 'translateY(0)';
+      }
+    }
+
+    function scheduleCloseMega() {
+      if (megaCloseTimer) clearTimeout(megaCloseTimer);
+      megaCloseTimer = setTimeout(() => {
+        closeMegaImmediate();
+        if (tabApplianceTrigger && panelByAppliance) {
+          switchDesktopMode(tabApplianceTrigger, panelByAppliance);
+        }
+      }, 250);
+    }
+
+    function closeMegaImmediate() {
+      if (megaCloseTimer) {
+        clearTimeout(megaCloseTimer);
+        megaCloseTimer = null;
+      }
+      if (megaWrapper && megaPanel) {
+        megaWrapper.classList.remove('hover-active');
+        megaPanel.classList.remove('open');
+        megaPanel.style.opacity = '';
+        megaPanel.style.visibility = '';
+        megaPanel.style.pointerEvents = '';
+        megaPanel.style.transform = '';
+      }
+    }
+
+    function openClean() {
+      if (megaCloseTimer) {
+        clearTimeout(megaCloseTimer);
+        megaCloseTimer = null;
+      }
+      closeMegaImmediate();
+
+      if (cleanCloseTimer) {
+        clearTimeout(cleanCloseTimer);
+        cleanCloseTimer = null;
+      }
+      if (cleanWrapper && cleanPanel) {
+        cleanWrapper.classList.add('hover-active');
+        cleanPanel.classList.add('open');
+        cleanPanel.style.opacity = '1';
+        cleanPanel.style.visibility = 'visible';
+        cleanPanel.style.pointerEvents = 'auto';
+        cleanPanel.style.transform = 'translateY(0)';
+      }
+    }
+
+    function scheduleCloseClean() {
+      if (cleanCloseTimer) clearTimeout(cleanCloseTimer);
+      cleanCloseTimer = setTimeout(() => {
+        closeCleanImmediate();
+      }, 250);
+    }
+
+    function closeCleanImmediate() {
+      if (cleanCloseTimer) {
+        clearTimeout(cleanCloseTimer);
+        cleanCloseTimer = null;
+      }
+      if (cleanWrapper && cleanPanel) {
+        cleanWrapper.classList.remove('hover-active');
+        cleanPanel.classList.remove('open');
+        cleanPanel.style.opacity = '';
+        cleanPanel.style.visibility = '';
+        cleanPanel.style.pointerEvents = '';
+        cleanPanel.style.transform = '';
+      }
+    }
+
+    if (megaWrapper && megaPanel) {
+      megaWrapper.addEventListener('mouseenter', openMega);
+      megaWrapper.addEventListener('mouseleave', scheduleCloseMega);
+      megaPanel.addEventListener('mouseenter', openMega);
+      megaPanel.addEventListener('mouseleave', scheduleCloseMega);
+    }
+
+    if (cleanWrapper && cleanPanel) {
+      cleanWrapper.addEventListener('mouseenter', openClean);
+      cleanWrapper.addEventListener('mouseleave', scheduleCloseClean);
+      cleanPanel.addEventListener('mouseenter', openClean);
+      cleanPanel.addEventListener('mouseleave', scheduleCloseClean);
+    }
 
     // Master-Detail Category Switcher (Hover & Click)
     const applianceNavButtons = document.querySelectorAll('.appliance-nav-btn');

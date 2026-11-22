@@ -1666,17 +1666,18 @@ h1, h2, h3, h4, h5, h6, p, a, span, li {
   display: none;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 7px 13px;
+  gap: 7px;
+  padding: 8px 14px !important;
+  min-height: 40px !important;
   background: #071b33 !important;
   color: #ffffff !important;
-  border: 1px solid #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
   border-radius: 10px !important;
   cursor: pointer;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 800;
-  box-shadow: 0 2px 8px rgba(7, 27, 51, 0.2);
+  box-shadow: 0 3px 10px rgba(7, 27, 51, 0.3) !important;
   z-index: 1001;
   flex-shrink: 0;
   touch-action: manipulation;
@@ -1689,7 +1690,9 @@ h1, h2, h3, h4, h5, h6, p, a, span, li {
 .hamburger-btn:hover,
 .hamburger-btn:active {
   background: #0284c7 !important;
+  border-color: #0284c7 !important;
   color: #ffffff !important;
+  transform: translateY(-1px);
 }
 
 .hamburger-btn * {
@@ -1697,67 +1700,88 @@ h1, h2, h3, h4, h5, h6, p, a, span, li {
 }
 
 .hamburger-btn svg {
+  display: block;
   stroke: #ffffff !important;
-  width: 20px !important;
-  height: 20px !important;
+  color: #ffffff !important;
+  width: 22px !important;
+  height: 22px !important;
   flex-shrink: 0;
 }
 
-.hamburger-btn span {
+.hamburger-btn span,
+.hamburger-btn .hamburger-title {
   color: #ffffff !important;
   font-weight: 800;
+  font-size: 13.5px;
+  line-height: 1;
+}
+
+/* Fallback if spans are rendered without svg */
+.hamburger-btn span:empty {
+  display: block;
+  width: 22px;
+  height: 2.5px;
+  background: #ffffff !important;
+  border-radius: 2px;
+  margin: 2px 0;
 }
 
 /* ==========================================================================
    MOBILE DRAWER & ACCORDION (Zero-Overflow Guaranteed)
    ========================================================================== */
 .mobile-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: min(310px, 84vw);
-  height: 100%;
-  height: 100dvh;
-  background-color: #ffffff;
-  box-shadow: -6px 0 30px rgba(4, 16, 33, 0.25);
-  z-index: 2100;
-  transform: translateX(110%);
-  visibility: hidden;
-  pointer-events: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
-  overflow-y: auto;
+  position: fixed !important;
+  top: 0 !important;
+  right: -360px !important;
+  left: auto !important;
+  width: min(320px, 86vw) !important;
+  height: 100% !important;
+  height: 100dvh !important;
+  background-color: #ffffff !important;
+  box-shadow: -6px 0 35px rgba(0, 0, 0, 0.35) !important;
+  z-index: 99999999 !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.3s ease !important;
+  overflow-y: auto !important;
   -webkit-overflow-scrolling: touch;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   touch-action: pan-y;
 }
 
 .mobile-drawer.open {
-  transform: translateX(0);
-  visibility: visible;
-  pointer-events: auto;
+  right: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .drawer-backdrop {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(4, 16, 33, 0.65);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  z-index: 2050;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  background: rgba(7, 27, 51, 0.72) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  z-index: 99999990 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
   touch-action: none;
 }
 
 .drawer-backdrop.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
 
 .drawer-header {
@@ -2961,128 +2985,142 @@ textarea.form-control {
   }
 }
 
-/* Sticky Quick Mobile Contact Bar (Visible only on screens <= 768px) */
-.mobile-sticky-bar {
-  display: none;
+/* ==========================================================================
+   SLEEK FLOATING ACTION BUTTONS (Elevated & Zero Mobile System Bar Overlap)
+   ========================================================================== */
+.floating-contact-wrap {
+  position: fixed !important;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px)) !important;
+  left: 16px !important;
+  right: 16px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  pointer-events: none !important;
+  z-index: 999999 !important;
 }
 
-@media (max-width: 768px) {
-  /* Prevent content/footer cutoff by sticky bar */
-  body {
-    padding-bottom: 76px;
-  }
+.fab-btn {
+  pointer-events: auto !important;
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 11px 18px !important;
+  border-radius: 50px !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
 
-  .mobile-sticky-bar {
-    display: block;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1050;
-    background: rgba(7, 27, 51, 0.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 -4px 20px rgba(4, 16, 33, 0.35);
-    padding: 8px 10px;
-    padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
-  }
+.fab-btn:active {
+  transform: scale(0.94) !important;
+}
 
-  .sticky-bar-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    max-width: 500px;
-    margin: 0 auto;
-    width: 100%;
-  }
+.fab-whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
 
-  .sticky-bar-btn {
-    flex: 1;
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 6px 10px;
-    border-radius: var(--radius-sm, 10px);
-    text-decoration: none;
-    transition: transform 0.15s ease, filter 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
+.fab-phone {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
 
-  .sticky-bar-btn:active {
-    transform: scale(0.97);
-  }
+.fab-icon {
+  width: 22px !important;
+  height: 22px !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+}
 
-  .sticky-general-btn {
-    background: linear-gradient(135deg, #c8102e 0%, #9e0c24 100%);
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 2px 8px rgba(200, 16, 46, 0.3);
-  }
+.fab-label {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.2px !important;
+}
 
-  .sticky-coldair-btn {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
-  }
+/* Subtle Glowing Pulse Rings */
+.fab-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 52px;
+  pointer-events: none;
+  z-index: -1;
+  animation: fabPulseGlow 2.5s infinite;
+}
 
-  .sticky-btn-icon {
-    font-size: 18px;
-    flex-shrink: 0;
-    line-height: 1;
-  }
+.fab-whatsapp .fab-pulse {
+  background: rgba(37, 211, 102, 0.45);
+}
 
-  .sticky-btn-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.2;
-    min-width: 0;
-  }
+.fab-phone .fab-pulse {
+  background: rgba(2, 132, 199, 0.45);
+}
 
-  .sticky-btn-title {
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    opacity: 0.95;
-  }
-
-  .sticky-btn-number {
-    font-size: 13.5px;
-    font-weight: 900;
-    letter-spacing: 0.5px;
-    font-family: inherit;
-    white-space: nowrap;
-  }
-
-  .sticky-bar-wa-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-sm, 10px);
-    background: #25d366;
-    color: #ffffff !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-    text-decoration: none;
-    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.35);
-    transition: transform 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .sticky-bar-wa-btn:active {
+@keyframes fabPulseGlow {
+  0% {
     transform: scale(0.95);
+    opacity: 0.85;
   }
+  70% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
+
+/* Completely hide legacy sticky bar */
+.mobile-sticky-bar {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding-bottom: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .floating-contact-wrap {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .fab-btn {
+    padding: 9px 13px !important;
+    font-size: 13px !important;
+    gap: 6px !important;
+  }
+  .fab-icon {
+    width: 19px !important;
+    height: 19px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .floating-contact-wrap {
+    left: auto !important;
+    right: 24px !important;
+    bottom: 24px !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .fab-btn {
+    padding: 12px 20px !important;
+  }
+}
 
   /* Safe area handling */
   .drawer-accordion-btn {

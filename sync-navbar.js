@@ -42,17 +42,40 @@ htmlFiles.forEach(file => {
   content = content.replace(/href=["']favicon-32x32\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
   content = content.replace(/href=["']favicon-16x16\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
 
-  // 1. Locate existing <header class="site-header" ...> </header>
+  // Cache bust CSS & JS to ?v=4.0
+  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.0');
+  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.0');
+
+  // Fast inline mobile menu script in <head> for zero-delay responsiveness
+  const inlineScriptMarker = '<!-- Fast Mobile Menu Handler -->';
+  if (!content.includes(inlineScriptMarker)) {
+    const inlineScriptTag = `\n  ${inlineScriptMarker}\n  <script>\n    window.toggleMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(!d)return;if(d.classList.contains('open')){d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';}else{d.classList.add('open');if(b)b.classList.add('active');if(h)h.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}};\n    window.closeMobileMenu=function(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var d=document.getElementById('mobileDrawer'),b=document.getElementById('drawerBackdrop'),h=document.getElementById('hamburgerBtn');if(d)d.classList.remove('open');if(b)b.classList.remove('active');if(h)h.setAttribute('aria-expanded','false');document.body.style.overflow='';};\n  </script>\n`;
+    content = content.replace('</head>', inlineScriptTag + '</head>');
+  }
+
+  // 1. Locate existing <header class="site-header" ...>
   const headerStartRegex = /<header\s+class=["']site-header["'][^>]*>/i;
   const headerStartMatch = content.match(headerStartRegex);
 
   if (headerStartMatch) {
     const headerStartIndex = headerStartMatch.index;
-    const headerEndTag = '</header>';
-    const headerEndIndex = content.indexOf(headerEndTag, headerStartIndex);
+    let fullHeaderEnd = -1;
 
-    if (headerEndIndex !== -1) {
-      const fullHeaderEnd = headerEndIndex + headerEndTag.length;
+    // Check if the END NAVBAR marker is present (from prior sync)
+    const endNavMarker = '<!-- END NAVBAR AND MOBILE NAVIGATION -->';
+    const markerIndex = content.indexOf(endNavMarker, headerStartIndex);
+
+    if (markerIndex !== -1) {
+      fullHeaderEnd = markerIndex + endNavMarker.length;
+    } else {
+      const headerEndTag = '</header>';
+      const headerEndIndex = content.indexOf(headerEndTag, headerStartIndex);
+      if (headerEndIndex !== -1) {
+        fullHeaderEnd = headerEndIndex + headerEndTag.length;
+      }
+    }
+
+    if (fullHeaderEnd !== -1) {
 
       // 2. Prepare file-specific active state navbar
       let customizedNavbar = navbarTemplate;
