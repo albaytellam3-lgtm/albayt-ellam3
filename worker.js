@@ -2,6 +2,18 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Instant Google Search Console verification handling (direct 200 OK, zero redirects)
+    if (url.pathname.startsWith('/google') && url.pathname.endsWith('.html')) {
+      const fileName = url.pathname.slice(1);
+      return new Response(`google-site-verification: ${fileName}`, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      });
+    }
+
     // Attempt to fetch the static asset
     let response = await env.ASSETS.fetch(request);
 
