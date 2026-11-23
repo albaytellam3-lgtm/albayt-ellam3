@@ -135,13 +135,39 @@ export default {
       }
 
       // 7. Normal asset fetching
-      const response = await env.ASSETS.fetch(request);
+      let response = await env.ASSETS.fetch(request);
+
+      // 8. If not found and clean URL without extension, try appending .html
+      if (response.status >= 400 && !rawPath.split('/').pop().includes('.')) {
+        const cleanPath = rawPath.replace(/\/$/, '');
+        if (cleanPath) {
+          try {
+            const tryHtmlReq = new Request(new URL(`${cleanPath}.html`, url.origin));
+            const htmlRes = await env.ASSETS.fetch(tryHtmlReq);
+            if (htmlRes.status === 200) {
+              return htmlRes;
+            }
+          } catch (e) {}
+        }
+      }
+
+      // 9. If still 400+, serve branded 404.html page
+      if (response.status >= 400) {
+        try {
+          const notFoundReq = new Request(new URL('/404.html', url.origin));
+          const notFoundRes = await env.ASSETS.fetch(notFoundReq);
+          const html = await notFoundRes.text();
+          return new Response(html, {
+            status: 404,
+            statusText: 'Not Found',
+            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+          });
+        } catch (e) {}
+      }
+
       return response;
     } catch (err) {
-      return new Response('Diagnostic Error: ' + err.message + '\n' + err.stack, {
-        status: 200,
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-      });
+      return env.ASSETS.fetch(request);
     }
   }
 };
