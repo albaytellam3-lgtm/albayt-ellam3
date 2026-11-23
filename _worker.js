@@ -7,10 +7,11 @@ export default {
       // Helper for clean 301 redirects
       const redirectTo = (path, status = 301) => {
         const dest = new URL(path, url.origin).toString();
-        return new Response(null, {
+        return new Response(`Redirecting to ${dest}`, {
           status: status,
           headers: {
             'Location': dest,
+            'Content-Type': 'text/plain; charset=utf-8',
             'Cache-Control': 'public, max-age=86400'
           }
         });
@@ -133,36 +134,14 @@ export default {
         }
       }
 
-      // 7. Fetch static asset
-      let response = await env.ASSETS.fetch(request);
-
-      // 8. If 404 and clean URL without extension, try appending .html
-      if (response.status === 404 && !rawPath.split('/').pop().includes('.')) {
-        const cleanPath = rawPath.replace(/\/$/, '');
-        if (cleanPath) {
-          const tryHtmlUrl = new URL(cleanPath + '.html', url.origin).toString();
-          const htmlRes = await env.ASSETS.fetch(new Request(tryHtmlUrl));
-          if (htmlRes.status < 400) {
-            return htmlRes;
-          }
-        }
-      }
-
-      // 9. If still 404, serve branded 404.html page
-      if (response.status === 404) {
-        const notFoundUrl = new URL('/404.html', url.origin).toString();
-        const notFoundRes = await env.ASSETS.fetch(new Request(notFoundUrl));
-        return new Response(notFoundRes.body, {
-          status: 404,
-          statusText: 'Not Found',
-          headers: notFoundRes.headers
-        });
-      }
-
+      // 7. Normal asset fetching
+      const response = await env.ASSETS.fetch(request);
       return response;
     } catch (err) {
-      // Safe fallback - never 500
-      return env.ASSETS.fetch(request);
+      return new Response('Diagnostic Error: ' + err.message + '\n' + err.stack, {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+      });
     }
   }
 };
