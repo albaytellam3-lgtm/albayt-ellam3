@@ -28,7 +28,7 @@ export default {
         });
       }
 
-      // 2. Static files pass directly to Cloudflare Pages Asset Engine
+      // 2. Static files pass directly to Cloudflare Assets Engine
       if (
         rawPath.startsWith('/assets/') ||
         rawPath.startsWith('/css/') ||
@@ -36,9 +36,7 @@ export default {
         rawPath.startsWith('/images/') ||
         rawPath === '/robots.txt' ||
         rawPath === '/sitemap.xml' ||
-        rawPath === '/sitemap_index.xml' ||
-        rawPath === '/404' ||
-        rawPath === '/404.html'
+        rawPath === '/sitemap_index.xml'
       ) {
         return env.ASSETS.fetch(request);
       }
@@ -71,6 +69,9 @@ export default {
       }
       if (lower.includes('8583a781ada9-a784868584')) {
         return redirectTo('/service-pest-control.html');
+      }
+      if (lower.includes('a7848386a8-88a784b3aca7af')) {
+        return redirectTo('/service-upholstery.html');
       }
 
       // 6. Semantic Arabic Path Matching for legacy URLs
@@ -132,8 +133,33 @@ export default {
         }
       }
 
-      // 7. Normal asset fetching (Cloudflare Pages natively serves 404.html on not found)
-      return env.ASSETS.fetch(request);
+      // 7. Fetch static asset
+      let response = await env.ASSETS.fetch(request);
+
+      // 8. If 404 and clean URL without extension, try appending .html
+      if (response.status === 404 && !rawPath.split('/').pop().includes('.')) {
+        const cleanPath = rawPath.replace(/\/$/, '');
+        if (cleanPath) {
+          const tryHtmlUrl = new URL(cleanPath + '.html', url.origin).toString();
+          const htmlRes = await env.ASSETS.fetch(new Request(tryHtmlUrl));
+          if (htmlRes.status < 400) {
+            return htmlRes;
+          }
+        }
+      }
+
+      // 9. If still 404, serve branded 404.html page
+      if (response.status === 404) {
+        const notFoundUrl = new URL('/404.html', url.origin).toString();
+        const notFoundRes = await env.ASSETS.fetch(new Request(notFoundUrl));
+        return new Response(notFoundRes.body, {
+          status: 404,
+          statusText: 'Not Found',
+          headers: notFoundRes.headers
+        });
+      }
+
+      return response;
     } catch (err) {
       // Safe fallback - never 500
       return env.ASSETS.fetch(request);
