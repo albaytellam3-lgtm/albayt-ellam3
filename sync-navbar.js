@@ -42,9 +42,9 @@ htmlFiles.forEach(file => {
   content = content.replace(/href=["']favicon-32x32\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
   content = content.replace(/href=["']favicon-16x16\.png["']/g, 'href="assets/images/logo-icon-badge.png"');
 
-  // Cache bust CSS & JS to ?v=4.6
-  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.6');
-  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.6');
+  // Cache bust CSS & JS to ?v=4.8
+  content = content.replace(/styles\.css(?:\?v=[^"']*)?/g, 'styles.css?v=4.8');
+  content = content.replace(/script\.js(?:\?v=[^"']*)?/g, 'script.js?v=4.8');
 
   // Fast inline mobile menu & accordion handlers in <head> for zero-delay responsiveness
   const inlineScriptMarker = '<!-- Fast Mobile Menu Handler -->';

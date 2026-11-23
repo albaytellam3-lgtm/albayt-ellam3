@@ -12,7 +12,7 @@
   <meta name="theme-color" content="#071b33">
   <link rel="icon" type="image/png" href="assets/images/logo-icon-badge.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="assets/css/styles.css?v=4.6">
+  <link rel="stylesheet" href="assets/css/styles.css?v=4.8">
 
   <link rel="canonical" href="https://albayt-ellam3.com/archive.html">
 
@@ -57,6 +57,7 @@
     window.switchMobileSegment=function(btnId,panelId){var btns=document.querySelectorAll('.mobile-nav-segment .segment-btn');btns.forEach(function(b){b.classList.toggle('active',b.id===btnId||b.getAttribute('data-target')===panelId);});var panels=document.querySelectorAll('.mobile-panel-section');panels.forEach(function(p){p.classList.toggle('active',p.id===panelId);});};
     window.toggleMobileAccordion=function(btn,e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation();}var header=btn.closest?(btn.closest('.mob-accordion-header')||btn):btn;var item=header.closest?header.closest('.mob-accordion-item'):null;var body=item?item.querySelector('.mob-accordion-body'):header.nextElementSibling;if(!body)return;var isOpen=body.classList.contains('open');if(isOpen){body.classList.remove('open');header.setAttribute('aria-expanded','false');var ch=header.querySelector('.chevron');if(ch)ch.style.transform='rotate(0deg)';}else{body.classList.add('open');header.setAttribute('aria-expanded','true');var ch=header.querySelector('.chevron');if(ch)ch.style.transform='rotate(180deg)';}};
   </script>
+
 
 
 
@@ -1725,7 +1726,7 @@
   </footer>
 
 
-  <script src="assets/js/script.js?v=4.6" defer></script>
+  <script src="assets/js/script.js?v=4.8" defer></script>
 
   <script>
     // Archive Category Filter Logic
