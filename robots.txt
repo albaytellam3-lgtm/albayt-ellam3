@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://albayt-ellam3.com/sitemap.xml
+Sitemap: https://albayt-ellam3.com/sitemap_index.xml

@@ -1,1 +1,41 @@
+# Cloudflare Pages Redirects
 /googleb0aa70f6b17ec9aa.html /googleb0aa70f6b17ec9aa.html 200
+
+# Legacy WordPress & Services 301 Redirects
+/مكافحة-الحشرات/* /service-pest-control.html 301
+/مكافحة-الحشرات /service-pest-control.html 301
+/تنظيف-الكنب-والسجاد-والموكيت/* /service-upholstery.html 301
+/تنظيف-الكنب-والسجاد-والموكيت /service-upholstery.html 301
+/تنظيف-خزانات/* /service-tanks.html 301
+/تنظيف-خزانات /service-tanks.html 301
+/غسيل-سجاد/* /service-carpet-cleaning.html 301
+/غسيل-سجاد /service-carpet-cleaning.html 301
+/صيانة-غسالات/* /service-washing-machines.html 301
+/صيانة-غسالات /service-washing-machines.html 301
+/صيانة-ثلاجات/* /service-refrigerators.html 301
+/صيانة-ثلاجات /service-refrigerators.html 301
+/صيانة-مكيفات/* /service-ac.html 301
+/صيانة-مكيفات /service-ac.html 301
+
+# Legacy encoded slugs from Google Search Console
+/BAB38A84-A784B3ACA7AF/* /service-carpet-cleaning.html 301
+/BAB38A84-A784B3ACA7AF /service-carpet-cleaning.html 301
+/aa86b88a81-aeb2a786a7aa/* /service-tanks.html 301
+/aa86b88a81-aeb2a786a7aa /service-tanks.html 301
+/AA86B88A81-AEB2A786A7AA/* /service-tanks.html 301
+/AA86B88A81-AEB2A786A7AA /service-tanks.html 301
+/b9b284-aeb2a786a7aa-8883b481-aab3b1a8a7aa-a784858aa787/* /service-tanks.html 301
+/b9b284-aeb2a786a7aa-8883b481-aab3b1a8a7aa-a784858aa787 /service-tanks.html 301
+/8583a781ada9-a784868584-88a784b5b1a7b58ab1-88ac858ab9-a784adb4b1a7aa/* /service-pest-control.html 301
+/8583a781ada9-a784868584-88a784b5b1a7b58ab1-88ac858ab9-a784adb4b1a7aa /service-pest-control.html 301
+/AA86B88A81-A7848386A8-88A784B3ACA7AF-88A78488838AAA-A8AD81B1-A784A8A7/* /service-upholstery.html 301
+/AA86B88A81-A7848386A8-88A784B3ACA7AF-88A78488838AAA-A8AD81B1-A784A8A7 /service-upholstery.html 301
+/8583A781ADA9-A784868584-88A784B5B1A7B58AB1-88AC858AB9-A784ADB4B1A7AA/* /service-pest-control.html 301
+/8583A781ADA9-A784868584-88A784B5B1A7B58AB1-88AC858AB9-A784ADB4B1A7AA /service-pest-control.html 301
+
+# WordPress system directories
+/wp-content/* / 301
+/wp-admin/* / 301
+/wp-includes/* / 301
+/feed/* / 301
+/feed / 301
