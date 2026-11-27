@@ -86,12 +86,12 @@
   }
 
   // Start after 2.5 seconds on page load
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('load', () => {
     createPopupElement();
     setTimeout(() => {
       showNextOrder();
       // Rotate every 9 seconds
       intervalId = setInterval(showNextOrder, 9000);
-    }, 2500);
+    }, 5000);
   });
 })();
