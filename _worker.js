@@ -4,6 +4,20 @@ export default {
       const url = new URL(request.url);
       const rawPath = url.pathname;
 
+      // 1. Enforce HTTPS strictly (Permanent 301 Redirect)
+      if (url.protocol === 'http:') {
+        const httpsUrl = new URL(request.url);
+        httpsUrl.protocol = 'https:';
+        return Response.redirect(httpsUrl.toString(), 301);
+      }
+
+      // 2. Enforce Non-WWW (Permanent 301 Redirect)
+      if (url.hostname.startsWith('www.')) {
+        const nonWwwUrl = new URL(request.url);
+        nonWwwUrl.hostname = nonWwwUrl.hostname.replace(/^www\./, '');
+        return Response.redirect(nonWwwUrl.toString(), 301);
+      }
+
       // Helper for clean 301 redirects
       const redirectTo = (path, status = 301) => {
         const dest = new URL(path, url.origin).toString();
@@ -25,7 +39,10 @@ export default {
           return new Response(html, {
             status: 404,
             statusText: 'Not Found',
-            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+            headers: { 
+              'Content-Type': 'text/html; charset=utf-8',
+              'Cache-Control': 'no-cache, no-store, must-revalidate'
+            }
           });
         } catch (e) {
           return new Response('404 Not Found - البيت اللامع', {
@@ -36,7 +53,7 @@ export default {
         }
       };
 
-      // 1. Direct 200 OK for any Google verification file - no redirects!
+      // 3. Direct 200 OK for Google verification files
       if (rawPath.startsWith('/google') && rawPath.endsWith('.html')) {
         const fileName = rawPath.slice(1);
         return new Response(`google-site-verification: ${fileName}`, {
@@ -48,7 +65,7 @@ export default {
         });
       }
 
-      // 2. Decode URI path safely for Arabic strings
+      // 4. Decode URI path safely for Arabic strings
       let decodedPath = rawPath;
       try {
         decodedPath = decodeURIComponent(rawPath);
@@ -56,18 +73,24 @@ export default {
 
       const lower = decodedPath.toLowerCase();
 
-      // 3. Legacy WordPress & system paths
+      // 5. Comprehensive Legacy WordPress & system paths cleanup (301 to homepage or specific services)
       if (
         lower.startsWith('/wp-') ||
         lower.startsWith('/feed') ||
         lower.endsWith('.php') ||
         lower.startsWith('/xmlrpc') ||
+        lower.startsWith('/category/') ||
+        lower.startsWith('/tag/') ||
+        lower.startsWith('/author/') ||
+        lower.startsWith('/page/') ||
+        lower.startsWith('/comments/') ||
+        lower.startsWith('/trackback/') ||
         url.searchParams.has('p')
       ) {
         return redirectTo('/');
       }
 
-      // 4. Exact Old WordPress Slugs (from Google Search Console 404 report)
+      // 6. Exact Old WordPress Slugs from GSC
       if (lower.includes('bab38a84-a784b3aca7af')) {
         return redirectTo('/service-carpet-cleaning.html');
       }
@@ -81,7 +104,7 @@ export default {
         return redirectTo('/service-upholstery.html');
       }
 
-      // 5. Semantic Arabic Path Matching for legacy URLs
+      // 7. Semantic Arabic Path Matching for legacy WordPress URLs
       if (
         lower.includes('مكافحة') ||
         lower.includes('حشرات') ||
@@ -140,34 +163,40 @@ export default {
         }
       }
 
-      // 6. Fetch static asset safely
+      // 8. Try fetching the requested static asset directly
       let response;
       try {
         response = await env.ASSETS.fetch(request);
       } catch (e) {
-        // Asset not found by env.ASSETS
+        // Asset not found
       }
 
-      // 7. If missing and has clean path without extension, try appending .html
-      if ((!response || response.status >= 400) && !rawPath.split('/').pop().includes('.')) {
+      // If exact static file found and returned 200, serve it
+      if (response && response.status === 200) {
+        return response;
+      }
+
+      // 9. CLEAN URL HANDLING (CRITICAL SEO FIX FOR 58 ALTERNATE CANONICAL PAGES):
+      // If requested path has NO file extension (e.g. /article-20, /brand-samsung, /dishwashers)
+      // Check if a corresponding .html file exists!
+      // If it exists -> DO A 301 PERMANENT REDIRECT to the canonical .html URL!
+      // This eliminates duplicate 200 OK responses and tells Google unambiguously that .html is the canonical version!
+      if (!rawPath.split('/').pop().includes('.')) {
         const cleanPath = rawPath.replace(/\/$/, '');
         if (cleanPath) {
           try {
             const tryHtmlReq = new Request(new URL(`${cleanPath}.html`, url.origin));
             const htmlRes = await env.ASSETS.fetch(tryHtmlReq);
             if (htmlRes && htmlRes.status === 200) {
-              return htmlRes;
+              return redirectTo(`${cleanPath}.html`, 301);
             }
           } catch (e) {}
         }
       }
 
-      // 8. If asset still missing or error status, serve branded 404 page
-      if (!response || response.status >= 400) {
-        return serve404();
-      }
+      // 10. If asset still missing or error status, serve branded 404 page
+      return serve404();
 
-      return response;
     } catch (topError) {
       return new Response('CRITICAL WORKER ERROR: ' + topError.message + '\n' + topError.stack, {
         status: 200,
