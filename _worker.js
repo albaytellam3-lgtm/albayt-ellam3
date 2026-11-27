@@ -53,7 +53,7 @@ export default {
         }
       };
 
-      // 3. Direct 200 OK for Google verification files
+      // 3. Direct 200 OK for Google verification files & sitemaps
       if (rawPath.startsWith('/google') && rawPath.endsWith('.html')) {
         const fileName = rawPath.slice(1);
         return new Response(`google-site-verification: ${fileName}`, {
@@ -92,16 +92,16 @@ export default {
 
       // 6. Exact Old WordPress Slugs from GSC
       if (lower.includes('bab38a84-a784b3aca7af')) {
-        return redirectTo('/service-carpet-cleaning.html');
+        return redirectTo('/service-carpet-cleaning');
       }
       if (lower.includes('aa86b88a81-aeb2a786a7aa') || lower.includes('b9b284-aeb2a786a7aa')) {
-        return redirectTo('/service-tanks.html');
+        return redirectTo('/service-tanks');
       }
       if (lower.includes('8583a781ada9-a784868584')) {
-        return redirectTo('/service-pest-control.html');
+        return redirectTo('/service-pest-control');
       }
       if (lower.includes('a7848386a8-88a784b3aca7af')) {
-        return redirectTo('/service-upholstery.html');
+        return redirectTo('/service-upholstery');
       }
 
       // 7. Semantic Arabic Path Matching for legacy WordPress URLs
@@ -112,8 +112,8 @@ export default {
         lower.includes('نمل') ||
         lower.includes('بق')
       ) {
-        if (!rawPath.includes('service-pest-control.html')) {
-          return redirectTo('/service-pest-control.html');
+        if (!rawPath.includes('service-pest-control')) {
+          return redirectTo('/service-pest-control');
         }
       }
 
@@ -123,14 +123,14 @@ export default {
         lower.includes('مفروشات') ||
         lower.includes('صالون')
       ) {
-        if (!rawPath.includes('service-upholstery.html')) {
-          return redirectTo('/service-upholstery.html');
+        if (!rawPath.includes('service-upholstery')) {
+          return redirectTo('/service-upholstery');
         }
       }
 
       if (lower.includes('سجاد') || lower.includes('موكيت')) {
-        if (!rawPath.includes('service-carpet-cleaning.html') && !rawPath.includes('service-upholstery.html')) {
-          return redirectTo('/service-carpet-cleaning.html');
+        if (!rawPath.includes('service-carpet-cleaning') && !rawPath.includes('service-upholstery')) {
+          return redirectTo('/service-carpet-cleaning');
         }
       }
 
@@ -140,47 +140,46 @@ export default {
         lower.includes('تسربات') ||
         lower.includes('عزل')
       ) {
-        if (!rawPath.includes('service-tanks.html')) {
-          return redirectTo('/service-tanks.html');
+        if (!rawPath.includes('service-tanks')) {
+          return redirectTo('/service-tanks');
         }
       }
 
       if (lower.includes('غسال')) {
         if (!rawPath.includes('service-washing')) {
-          return redirectTo('/service-washing-machines.html');
+          return redirectTo('/service-washing-machines');
         }
       }
 
       if (lower.includes('ثلاج') || lower.includes('فريزر')) {
         if (!rawPath.includes('service-refrigerator') && !rawPath.includes('service-freezer')) {
-          return redirectTo('/service-refrigerators.html');
+          return redirectTo('/service-refrigerators');
         }
       }
 
       if (lower.includes('مكيف') || lower.includes('تكييف')) {
-        if (!rawPath.includes('service-ac.html')) {
-          return redirectTo('/service-ac.html');
+        if (!rawPath.includes('service-ac')) {
+          return redirectTo('/service-ac');
         }
       }
 
-      // 8. Try fetching the requested static asset directly
+      // 8. 301 Permanent Redirect any .html URL to clean URL (except root / or verification files)
+      if (rawPath.endsWith('.html') && !rawPath.startsWith('/google') && rawPath !== '/404.html') {
+        const cleanSlug = rawPath.slice(0, -5);
+        return redirectTo(cleanSlug === '/index' ? '/' : cleanSlug, 301);
+      }
+
+      // 9. Try fetching the requested static asset directly
       let response;
       try {
         response = await env.ASSETS.fetch(request);
-      } catch (e) {
-        // Asset not found
-      }
+      } catch (e) {}
 
-      // If exact static file found and returned 200, serve it
       if (response && response.status === 200) {
         return response;
       }
 
-      // 9. CLEAN URL HANDLING (CRITICAL SEO FIX FOR 58 ALTERNATE CANONICAL PAGES):
-      // If requested path has NO file extension (e.g. /article-20, /brand-samsung, /dishwashers)
-      // Check if a corresponding .html file exists!
-      // If it exists -> DO A 301 PERMANENT REDIRECT to the canonical .html URL!
-      // This eliminates duplicate 200 OK responses and tells Google unambiguously that .html is the canonical version!
+      // 10. If clean path without extension, fetch the corresponding .html file directly
       if (!rawPath.split('/').pop().includes('.')) {
         const cleanPath = rawPath.replace(/\/$/, '');
         if (cleanPath) {
@@ -188,13 +187,13 @@ export default {
             const tryHtmlReq = new Request(new URL(`${cleanPath}.html`, url.origin));
             const htmlRes = await env.ASSETS.fetch(tryHtmlReq);
             if (htmlRes && htmlRes.status === 200) {
-              return redirectTo(`${cleanPath}.html`, 301);
+              return htmlRes;
             }
           } catch (e) {}
         }
       }
 
-      // 10. If asset still missing or error status, serve branded 404 page
+      // 11. If asset still missing, serve branded 404 page
       return serve404();
 
     } catch (topError) {
